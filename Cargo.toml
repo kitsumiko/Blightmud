@@ -20,6 +20,10 @@ default = ["spellcheck", "audio"]
 text-to-speech = ["tts"]
 spellcheck = ["hunspell-rs", "hunspell-sys"]
 audio = ["rodio"]
+# Local memory-harness only (feat/tabs-mem-bench branch): precise heap
+# attribution via dhat. Installs a global allocator, so keep it OUT of `default`
+# and out of CI's `--all-features` runs.
+dhat-heap = ["dep:dhat"]
 
 [dependencies]
 libmudtelnet = "2.0.2"
@@ -58,6 +62,10 @@ mio = { version = "1.2", features = ["os-poll", "net"] }
 
 encoding_rs = "0.8"
 unicode-width = "0.2"
+
+# Local memory-harness only (feat/tabs-mem-bench branch); optional, pulled in
+# solely by the `dhat-heap` feature so normal/PR builds never see it.
+dhat = { version = "0.3", optional = true }
 
 [dev-dependencies]
 mockall = "0.14.0"

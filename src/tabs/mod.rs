@@ -22,3 +22,11 @@ pub use self::tab_set::TabSet;
 
 mod tab;
 mod tab_set;
+
+// Local memory-measurement probes (feat/tabs-mem-bench branch only). Never part
+// of a normal or PR build: `mem_probe` is test-only; `dhat_probe` additionally
+// requires the `dhat-heap` feature (which installs a global allocator).
+#[cfg(test)]
+mod mem_probe;
+#[cfg(all(test, feature = "dhat-heap"))]
+mod dhat_probe;

@@ -1,0 +1,23 @@
+-- Local memory-harness script template (feat/tabs-mem-bench branch only).
+-- run_rss.sh renders __N__/__K__/__W__ before each run. Creates N tabs and
+-- fills each with K lines of width W via blight.output_to. Tabs stay INACTIVE
+-- (we never switch_tab into them) because TabSet::output_to no-ops on the
+-- active tab — the lines only land in a tab's History while it is inactive.
+-- Quits ~1s later, after the queued Create/OutputTo events have drained, so
+-- the sampler can read peak VmHWM/VmData.
+local N = __N__
+local K = __K__
+local W = __W__
+local pad = string.rep("x", W)
+
+for i = 1, N do
+  blight.create_tab("t" .. i, {})
+end
+
+for i = 1, N do
+  for _ = 1, K do
+    blight.output_to("t" .. i, pad)
+  end
+end
+
+timer.add(1, 1, function() blight.quit() end)
